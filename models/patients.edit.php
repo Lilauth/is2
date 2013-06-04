@@ -7,7 +7,7 @@
 	$patientID = Router::seg( 2 );
 
 /* {{{ */
-	if( m_issetPOST() ) {
+	if( m_issetPOST() ){
 		$fields = array();
 		$errors = array();
 		if( !m_processPOST( $fields, $errors ) ) {
