@@ -1,13 +1,14 @@
 <?php
 
-	if( !__issetPOST( array( 'shortName', 'fullName' ) ) ) {
-		__redirect( '/obras-sociales?error=crear-obra-social' );
+	if( !__issetPOST( array( 'abbr', 'full' ) ) ) {
+		__echoJSON( array( 'success' => false ) );
 	}
 	
-	$shortName = __sanitizeValue( $_POST['shortName'] );
-	$fullName = __sanitizeValue( $_POST['fullName'] );
-	if( !$shortName || !$fullName ) {
-		__redirect( '/obras-sociales?error=crear-obra-social' );
+	$abbr = __sanitizeValue( $_POST['abbr'] );
+	// full puede estar vacio
+	$full = __sanitizeValue( $_POST['full'] );
+	if( !$abbr ) {
+		__echoJSON( array( 'success' => false ) );
 	}
 	
 	$insertId = DB::insert(
@@ -15,16 +16,21 @@
 			INSERT INTO
 				obrasSociales
 			VALUES
-				( null, ?, ? )
+				( null, ?, ?, ? )
 		',
-		array( strtolower( $shortName ), $fullName )
+		array( strtolower( $abbr ), $full, 'habilitada' )
 	);
 	
 	// maybe a constraint error
 	if( !$insertId ) {
-		__redirect( '/obras-sociales?error=crear-obra-social' );
+		__echoJSON( array( 'success' => false ) );
 	}
 	
-	__redirect( '/obras-sociales?exito=crear-obra-social' );
+	__echoJSON( array( 
+		'success' => true,
+		'data' => array(
+			'id' => $insertId
+		)
+	) );
 	
 ?>

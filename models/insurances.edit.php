@@ -1,15 +1,15 @@
 <?php
 
-	if( !__issetPOST( array( 'id', 'shortName', 'fullName' ) ) ) {
-		__redirect( '/obras-sociales?error=editar-obra-social' );
+	if( !__issetPOST( array( 'abbr', 'full' ) ) ) {
+		__echoJSON( array( 'success' => false ) );
 	}
 	
-	$shortName = __sanitizeValue( $_POST['shortName'] );
-	$fullName = __sanitizeValue( $_POST['fullName'] );
-	$id = __validateID( $_POST['id'] );
-	if( !$shortName || !$fullName || !$id ) {
-		__redirect( '/obras-sociales?error=editar-obra-social' );
+	$shortName = __sanitizeValue( $_POST['abbr'] );
+	$fullName = __sanitizeValue( $_POST['full'] );
+	if( !$shortName ) {
+		__echoJSON( array( 'success' => false ) );
 	}
+	$id = Router::seg( 2 );
 	
 	$rowsAffected = DB::update(
 		'
@@ -23,12 +23,17 @@
 		',
 		array( strtolower( $shortName ), $fullName, $id )
 	);
-	
+
 	// maybe a constraint error or id point to an inesisten record
-	if( $rowsAffected != 1 ) {
-		__redirect( '/obras-sociales?error=editar-obra-social' );
+	if( $rowsAffected < 0 ) {
+		__echoJSON( array( 'success' => false ) );
 	}
 	
-	__redirect( '/obras-sociales?exito=editar-obra-social' );
+	__echoJSON( array( 
+		'success' => true,
+		'data' => array(
+			'id' => $id
+		)
+	) );
 	
 ?>

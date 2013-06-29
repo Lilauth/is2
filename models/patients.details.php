@@ -5,7 +5,7 @@
 	$patientData = DB::select(
 		'
 			SELECT
-				p.id, p.apellidos, p.nombres, p.fechaNacimiento, p.dni, p.telefono, p.nroAfiliado,
+				p.id, p.apellidos, p.nombres, p.fechaNacimiento, p.dni, p.telefono, p.direccion, p.nroAfiliado,
 				os.nombreCorto AS obraSocialAbbr, os.nombreCompleto AS obraSocialNombre
 			FROM
 				pacientes AS p
@@ -16,15 +16,14 @@
 		',
 		array( $patientID )
 	);
-	
-	if( !count( $patientData ) ) {
+	if( !$patientData->rowCount() ) {
 		__echoJSON( array( 'success' => false ) );
 	}
 	
-	$patient = $patientData[0];
-	$patient['nombreCompleto'] = $patient['apellidos'] . ', ' . $patient['nombres'];
-	$patient['edad'] = date_diff( date_create( $patient['fechaNacimiento'] ), date_create() )->format( '%Y' );
+	$patient = $patientData->fetch();
+	$patient['edad'] = __getPatientOld( $patient['fechaNacimiento'] );
 	$patient['fechaNacimiento'] = __dateISOToLocale( $patient['fechaNacimiento'] );
+	$patient['dni'] = __formatDNI( $patient['dni'] );
 	
 	$appointments = DB::select(
 		'
@@ -43,6 +42,7 @@
 		array( $patientID )
 	
 	);
+	$appointments = $appointments->fetchAll();
 	for( $i = 0, $l = count( $appointments ); $i < $l; $i++ ) {
 		$appointment = &$appointments[$i];
 		$appointment['fecha'] = __dateISOToLocale( $appointment['fecha'] );

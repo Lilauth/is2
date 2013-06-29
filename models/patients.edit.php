@@ -1,7 +1,8 @@
 <?php
 
 	// both edit and create patients funtionality share some common things
-	require './models/_patients.new.edit.php';
+	global $PWD;
+	require_once $PWD . '/models/_patients.new.edit.php';
 
 	// get the id seg from /pacientes/122/editar
 	$patientID = Router::seg( 2 );
@@ -26,6 +27,7 @@
 					dni = ?,
 					fechaNacimiento = ?,
 					telefono = ?,
+					direccion = ?,
 					idObraSocial = ?,
 					nroAfiliado = ?
 				WHERE
@@ -43,11 +45,24 @@
 /* }}} */
 
 /* {{{ DEBO PEDIR EL PACIENTE QUE ESTA EN LA URL */
-	$patients = q_getPatients( array( ' p.id = ? ' ), array( $patientID ) );
-	if( !count( $patients ) ) {
+	$patients = DB::select(
+		'
+			SELECT
+				p.id, p.apellidos, p.nombres, p.sexo, p.dni, p.idObraSocial, p.fechaNacimiento, p.telefono, p.direccion, p.nroAfiliado,
+				os.nombreCorto AS obraSocialNombre
+			FROM
+				pacientes AS p
+				INNER JOIN obrasSociales AS os
+					ON os.id = p.idObraSocial
+			WHERE 
+				p.id = ?
+		',
+		array( $patientID )
+	);
+	if( !$patients->rowCount() ) {
 		__redirect( '/pacientes?error=editar-paciente' );
 	}
-	$patient = $patients[0];
+	$patient = $patients->fetch();
 /* }}} */
 
 /* {{{ */
@@ -56,6 +71,7 @@
 	$username = __getUsername();
 	
 	$page = 'Editar';
+	$buttonLabel = 'Editar paciente';
 	
 	if( __GETField( 'error' ) ) {
 		$editError = true;
@@ -80,6 +96,7 @@
 			'insurances' => $insurances,
 			'patient' => $patient,
 			'page' => $page,
+			'buttonLabel' => $buttonLabel,
 // estas son las varaibles que son edit, y que debo
 // conocer para no que '_patients.new.edit' no se rompa
 			'createError' => false

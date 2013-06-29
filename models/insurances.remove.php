@@ -1,15 +1,8 @@
 <?php
-
-	if( !__issetPOST( array( 'id' ) ) ) {
-		__redirect( '/obras-sociales?error=borrar-obra-social' );
-	}
 	
-	$id = __validateID( $_POST['id'] );
-	if( !$id ) {
-		__redirect( '/obras-sociales?error=borrar-obra-social' );
-	}
+	$id = Router::seg( 2 );
 	
-	$rowsAffected = DB::update(
+	$rowsAffected = DB::delete(
 		'
 			DELETE FROM
 				obrasSociales
@@ -21,9 +14,14 @@
 
 	// maybe a constraint error or id point to an inesisten record
 	if( $rowsAffected != 1 ) {
-		__redirect( '/obras-sociales?error=borrar-obra-social' );
+		__echoJSON( array( 'success' => false ) );
 	}
 	
-	__redirect( '/obras-sociales?exito=borrar-obra-social' );
+	__echoJSON( array(
+		'success' => true,
+		'data' => array(
+			'id' => $id
+		)
+	) );
 	
 ?>

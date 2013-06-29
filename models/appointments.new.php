@@ -30,7 +30,10 @@
 		//	tampoco una fecha anterior a la actual
 		// 3) que el medico soporte la obra social del paciente
 		// 4) que no exista una un turno YA registrado con la misma fecha, hora y idMedico
-		// 5) TODO: checkear medicos licencia
+		// 5) que el paciente tenga registrado un turno para la misma fecha y hora
+		//	pero con otro medico
+		// 6) que el medico este de licencia para la fecha requerida
+		// 7) verifica que la obra social este habilitada
 		$insertId = DB::insert(
 			'
 				INSERT INTO 
@@ -40,12 +43,12 @@
 			',
 			array( $date, $time, $doctorID, $patientID, 'esperando' )
 		);
+
 		if( !$insertId ) {
-			//die;
 			__redirect( '/turnos/crear?error=crear-turno&campos=' . base64_encode( implode( '|', DB::getErrorList() ) ) );
 		}
 		
-		__redirect( '/turnos?id=' . $insertId );
+		__redirect( '/turnos?exito=crear-turno&id=' . $insertId );
 	}
 
 // PIDO LA LISTA DE DOCTORES

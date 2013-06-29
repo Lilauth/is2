@@ -1,206 +1,196 @@
 <?php t_startHead( 'Pacientes' ); ?>
-		<style>
-			label {
-				cursor: default;
-			}
-			.is2-grid-header th {
-				text-align: center !important;
-				vertical-align: middle !important;
-			}
-			.is2-grid-header th:nth-child( 1 ),
-			.is2-grid-header th:nth-child( 2 ) {
-				width: 164px;
-			}
-			.is2-grid-header th:nth-child( 4 ) {
-				width: 105px;
-				text-align: left !important;
-			}
-			.is2-grid-header th:nth-child( 4 ) > span {
-				display: inline-block;
-				text-align: center;
-				width: 77px;
-			}
-			.is2-grid-header th:nth-child( 4 ) .is2-dropdownmenu {
-				position: relative;
-				top: -10px;
-			}
-			.is2-grid-header th:nth-child( 5 ) {
-				width: 80px;
-			}
-			.is2-grid td {
-				text-align: center !important;
-				font-size: 13px;
-			}
-			.is2-grid td span {
-				display: block;
-				word-wrap: break-word;
-			}
-			.is2-grid td:nth-child( 1 ) span,
-			.is2-grid td:nth-child( 2 ) span {
-				width: 155px;
-				text-align: left;
-			}
-			.is2-grid td:nth-child( 3 ) {
-				width: 65px;
-			}
-			.is2-grid td:nth-child( 4 ) {
-				width: 65px;
-			}
-			.is2-grid td:nth-child( 5 ) {
-				width: 100px;
-			}
-			.is2-grid td:nth-child( 6 ) span {
-				width: 150px;
-				text-align: left;
-			}
-			.is2-grid td:nth-child( 7 ) span {
-				width: 100px;
-				text-transform: uppercase;
-			}
-			.is2-grid td:nth-child( 8 ) span {
-				width: 130px;
-			}
-			.is2-grid td:nth-child( 9 ) span {
-				text-align: center;
-			}
-			.is2-grid td:last-child {
-				width: 95px;
-			}
-			.pagination {
-				margin: 20px 0 10px 0;
-			}
-			.pager {
-				margin: 20px 0 0 0;
-			}
-			
-			.is2-search-trigger {
-				float: right;
-				margin: 0 0 10px;
-			}
-			.is2-insurances-listbox {
-				height: 200px;
-				margin: 0 0 0 10px;
-				overflow-y: scroll;
-			}
-		</style>
-		<style>
-			/* popup de paciente detalles */
-			@import url(http://fonts.googleapis.com/css?family=Allura|Zeyada|Parisienne|Sue+Ellen+Francisco);
-			
-			#is2-modal-details {
-				background: #fff;
-				border-radius: 0;
-				padding: 0;
-				font-family: 'Allura', cursive;
-				font-family: 'Sue Ellen Francisco', cursive;
-				font-family: 'Parisienne', cursive;
-				font-family: 'Zeyada', cursive;
-				width: 850px;
-				max-height: 495px;
-				z-index: 100000;
-				box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.1);
-			}
-			#is2-modal-details * {
-				margin: 0;
-			}
-			#is2-modal-details .modal-body {
-				line-height: 0;
-				padding: 0;
-				position: absolute;
-				right: 4px;
-				top: 5px;
-				overflow: hidden;
-			}
-			.is2-modal-details-header {
-				position: relative;
-				font-size: 30px;
-			}
-			.is2-modal-details-header h1 {
-				padding: 10px;
-			}
-			.is2-modal-details-header ul {
-				padding: 0 10px 10px 10px;
-			}
-			.is2-modal-details-header li {
-				list-style-type: none;
-				display: inline-block;
-				margin: 10px 0;
-			}
-			.is2-modal-details-header:after {
-				border-bottom: 1px solid #ffaa9f;
-				border-top: 1px solid #ffaa9f;
-				height: 2px;
-				width: 100%;
-				content: '';
-				position: absolute;
-			}
-			.is2-modal-details-body {
-				margin: 15px 0;
-			}
-			.is2-modal-details-body li {
-				display: block;
-				font-size: 25px;
-				border-bottom: 1px solid #ccc;
-				line-height: 2;
-				padding: 0 0 0 10px;
-			}
-			.is2-modal-details-body li:last-child {
-				border-bottom: 0;
-			}
-			.is2-modal-details-appointments {
-				height: 200px;
-				overflow-y: scroll;
-				margin: 5px 0 0 0;
-				border-top: 1px solid #ccc;
-				font-size: 25px;
-			}
+	<style>
+		label {
+			cursor: default;
+		}
+		.is2-grid-header th:nth-child( 1 ),
+		.is2-grid-header th:nth-child( 2 ) {
+			width: 164px;
+		}
+		.is2-grid-header th:nth-child( 4 ) {
+			width: 105px;
+			text-align: left !important;
+		}
+		.is2-grid-header th:nth-child( 4 ) > span {
+			display: inline-block;
+			text-align: center;
+			width: 77px;
+		}
+		.is2-grid-header th:nth-child( 4 ) .is2-dropdownmenu {
+			position: relative;
+			top: -10px;
+		}
+		.is2-grid-header th:nth-child( 5 ) {
+			width: 80px;
+		}
+		.is2-grid td {
+			text-align: center !important;
+			font-size: 13px;
+		}
+		.is2-grid td span {
+			display: block;
+			word-wrap: break-word;
+		}
+		.is2-grid td:nth-child( 1 ) span,
+		.is2-grid td:nth-child( 2 ) span {
+			width: 155px;
+			text-align: left;
+		}
+		.is2-grid td:nth-child( 3 ) {
+			width: 65px;
+		}
+		.is2-grid td:nth-child( 4 ) {
+			width: 65px;
+		}
+		.is2-grid td:nth-child( 5 ) {
+			width: 100px;
+		}
+		.is2-grid td:nth-child( 6 ) span {
+			width: 150px;
+			text-align: left;
+		}
+		.is2-grid td:nth-child( 7 ) span {
+			width: 100px;
+			text-transform: uppercase;
+		}
+		.is2-grid td:nth-child( 8 ) span {
+			width: 130px;
+		}
+		.is2-grid td:nth-child( 9 ) span {
+			text-align: center;
+		}
+		.is2-grid td:last-child {
+			width: 95px;
+			white-space: nowrap;
+		}
+		.is2-grid td:last-child .btn:not( :last-child ) {
+			margin: 0 5px 0 0;
+		}
+		.pagination {
+			margin: 20px 0 10px 0;
+		}
+		.pager {
+			margin: 20px 0 0 0;
+		}
+		
+		.is2-search-trigger {
+			float: right;
+			margin: 0 0 10px;
+		}
+		.is2-insurances-listbox {
+			height: 200px;
+			margin: 0 0 0 10px;
+			overflow-y: scroll;
+		}
+	</style>
+	<style>
+		/* popup de paciente detalles */
+		#is2-modal-details {
+			background: #fff;
+			border-radius: 0;
+			padding: 0;
+			font-family: "Open Sans", cursive;
+			width: 850px;
+			max-height: 495px;
+			z-index: 100000;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.1);
+		}
+		#is2-modal-details * {
+			margin: 0;
+		}
+		#is2-modal-details .modal-body {
+			line-height: 0;
+			padding: 0;
+			position: absolute;
+			right: 4px;
+			top: 5px;
+			overflow: hidden;
+		}
+		.is2-modal-details-header {
+			position: relative;
+			font-size: 30px;
+		}
+		.is2-modal-details-header h1 {
+			padding: 10px;
+		}
+		.is2-modal-details-header h1 > span:last-child {
+			padding: 0 0 0 10px;
+		}
+		.is2-modal-details-header ul {
+			padding: 0 10px 10px 10px;
+		}
+		.is2-modal-details-header li {
+			list-style-type: none;
+			display: inline-block;
+			padding: 0 10px 0 0;
+		}
+		.is2-modal-details-header:after {
+			border-bottom: 1px solid #ffaa9f;
+			border-top: 1px solid #ffaa9f;
+			height: 2px;
+			width: 100%;
+			content: '';
+			position: absolute;
+		}
+		.is2-modal-details-body {
+			margin: 15px 0;
+		}
+		.is2-modal-details-body li {
+			display: block;
+			font-size: 25px;
+			border-bottom: 1px solid #ccc;
+			line-height: 2;
+			padding: 0 0 0 10px;
+		}
+		.is2-modal-details-body li strong {
+			padding: 0 0 0 5px;
+		}
+		.is2-modal-details-body li:last-child {
+			border-bottom: 0;
+		}
+		.is2-modal-details-appointments {
+			height: 200px;
+			overflow-y: scroll;
+			margin: 5px 0 0 0;
+			border-top: 1px solid #ccc;
+			font-size: 25px;
+		}
 
-			.is2-modal-details-appointments tr:hover {
-				background-color: #eee;
-				-webkit-transition: 0.2s;
-				-moz-transition:    0.2s;
-				-ms-transition:     0.2s;
-				-o-transition:      0.2s;
-			}
-			.is2-modal-details-appointments td {
-				list-style: none;
-				overflow: hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				padding: 10px 5px 10px 50px;
-				border-top: 0;
-			}
-			.is2-modal-details-appointments tr {
-				border-bottom: 1px dotted #ccc;
-			}
-			.is2-modal-details-appointments tr:last-child {
-				border-bottom: 0;
-			}
-			.wrapper {
-				position: relative;
-			}
-			.is2-preloader-wrapper {
-				width: 128px;
-				height: 128px;
-				position: absolute;
-				background: #fff;
-				border: 1px solid #ccc;
-				border-radius: 10px;
-				padding: 10px;
-				top: 30%;
-				left: 40%;
-				box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 5px rgba(0, 0, 0, 0.1);
-			}
-			.is2-modal-details-appointments-empty {
-				text-align: center;
-				padding: 10px 0 0 0;
-				color: #ffaa9f;
-			}
-			.is2-patient-data-insurance {
-				font-size: 20px;
-				color: #777;
-			}
-		</style>
+		.is2-modal-details-appointments tr:hover {
+			background-color: #eee;
+			-webkit-transition: 0.2s;
+			-moz-transition:    0.2s;
+			-ms-transition:     0.2s;
+			-o-transition:      0.2s;
+		}
+		.is2-modal-details-appointments td {
+			list-style: none;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			padding: 10px 5px 10px 50px;
+			border-top: 0;
+			font-size: 22px;
+		}
+		.is2-modal-details-appointments tr {
+			border-bottom: 1px dotted #ccc;
+		}
+		.is2-modal-details-appointments tr:last-child {
+			border-bottom: 0;
+		}
+		.is2-modal-details-appointments tr td span:last-child {
+			padding: 0 0 0 5px;
+		}
+		.is2-modal-details-appointments-empty {
+			text-align: center;
+			padding: 10px 0 0 0;
+			color: #ffaa9f;
+		}
+		.is2-patient-data-insurance {
+			font-size: 20px;
+			color: #777;
+		}
+	</style>
 
 <?php t_endHead(); ?>
 <?php t_startBody( $username, 'patients'  ); ?>
@@ -227,7 +217,7 @@
 			<div class="is2-pagetitle clearfix">
 				<h3>Pacientes</h3>
 				<a class="btn pull-right btn-warning" href="/pacientes/crear"><i class="icon-plus"></i> Crear un nuevo paciente</a>
-				<form class="form-search pull-right is2-search-quick-form" method="post" action="/pacientes/busqueda-rapida">
+				<form class="form-search pull-right is2-search-quick-form">
 					<div class="is2-search-quick-control input-append control-group <?php echo $searchQuickError ? 'error': ''; ?>">
 						<input type="text" class="input-large search-query is2-search-quick-input" placeholder="Búsqueda rápida" name="keyword" value="<?php echo $quickSearchValue; ?>">
 						<button type="submit" class="btn"><i class="icon-search"></i></button>
@@ -243,7 +233,7 @@
 						</a>
 					</div>
 					<div id="is2-search-patients" class="accordion-body collapse out">
-						<form class="accordion-inner" method="post" action="/pacientes/busqueda-avanzada">
+						<form class="accordion-inner is2-search-advanced-form">
 							<div class="alert">
 								Sepa que puede combinar los campos entre si para realizar búsquedas más precisas
 							</div>
@@ -254,17 +244,17 @@
 								<legend>Buscar pacientes con apellidos</legend>
 
 								<label>Apellidos:</label>
-								<input type="text" class="input-xxlarge" name="lastName" value="<?php echo __sanitizeValue( $persistValues['lastName'] ); ?>" placeholder="Para buscar por varios apellidos simplemente separelos con un espacio">
+								<input type="text" class="input-xxlarge" name="lastName" value="<?php echo $persistValues['lastName']; ?>" placeholder="Para buscar por varios apellidos simplemente separelos con un espacio">
 							</fieldset>
 							<fieldset>
 								<legend>Buscar pacientes con nombres</legend>
 								<label>Nombres:</label>
-								<input type="text" class="input-xxlarge" name="firstName" value="<?php echo __sanitizeValue( $persistValues['firstName'] ); ?>" placeholder="Para buscar por varios nombres simplemente separelos con un espacio">
+								<input type="text" class="input-xxlarge" name="firstName" value="<?php echo $persistValues['firstName']; ?>" placeholder="Para buscar por varios nombres simplemente separelos con un espacio">
 							</fieldset>
 							<fieldset>
 								<legend>Buscar pacientes con numero de DNI</legend>
 								<label>Número de DNI:</label>
-								<input type="text" class="input-xxlarge" name="patientsList" value="<?php echo __sanitizeValue( $persistValues['patientsList'] ); ?>" placeholder="Para buscar por varios números de DNI simplemente separelos con un espacio">
+								<input type="text" class="input-xxlarge" name="patientsList" value="<?php echo $persistValues['patientsList']; ?>" placeholder="Para buscar por varios números de DNI simplemente separelos con un espacio">
 							</fieldset>
 							<fieldset class="form-inline">
 								<legend>Buscar pacientes con fecha de nacimiento</legend>
@@ -298,7 +288,7 @@
 							<fieldset>
 								<legend>Buscar pacientes con número de afiliado</legend>
 								<label>Número de afiliado de la obra social:</label>
-								<input type="text" class="input-xxlarge" name="affiliateInsuranceNumber" placeholder="Separe con espacios para buscar por varios números de afiliado" value="<?php echo __sanitizeValue( $persistValues['affiliateInsuranceNumber'] ); ?>">
+								<input type="text" class="input-xxlarge" name="affiliateInsuranceNumber" placeholder="Separe con espacios para buscar por varios números de afiliado" value="<?php echo $persistValues['affiliateInsuranceNumber']; ?>">
 							</fieldset>
 							<button type="submit" class="btn btn-large btn-primary is2-search-trigger">Buscar</button>
 						</form>
@@ -316,62 +306,57 @@
 				</ul>
 			</div>
 			
-			<?php if( count( $patients ) ): ?>
+			<?php if( $patients->rowCount() ): ?>
 			<table class="table is2-grid-header btn-inverse">
-				<thead>
-					<tr>
-						<th>
-							Apellidos
-							<?php t_lastNameMenu(); ?>
-						</th>
-						<th>
-							Nombres
-							<?php t_firstNameMenu(); ?>
-						</th>
-						<th>DNI</th>
-						<th>
-							<span>Fecha de</span>
-							nacimiento
-							<?php t_birthDateMenu(); ?>
-						</th>
-						<th>Teléfono</th>
-						<th>Obra social</th>
-						<th>Acciones</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
+				<tr>
+					<th>
+						Apellidos
+						<?php t_lastNameMenu( $orderByLastName ); ?>
+					</th>
+					<th>
+						Nombres
+						<?php t_firstNameMenu( $orderByFirstName ); ?>
+					</th>
+					<th>DNI</th>
+					<th>
+						<span>Fecha de</span>
+						nacimiento
+						<?php t_birthDateMenu( $orderByBirthDate ); ?>
+					</th>
+					<th>Teléfono</th>
+					<th>Obra social</th>
+					<th>Acciones</th>
+				</tr>
 			</table>
 			<div class="is2-grid-wrapper">
 				<table class="table is2-grid">
-					<tbody>
 					<?php foreach( $patients as $patient ): ?>
-						<tr class="is2-patients-row" data-patient-id="<?php echo $patient['id']; ?>">
-							<td>
-								<span title="<?php echo $patient['apellidos']; ?>"><?php echo $patient['apellidos']; ?></span>
-							</td>
-							<td>
-								<span title="<?php echo $patient['nombres']; ?>"><?php echo $patient['nombres']; ?></span>
-							</td>
-							<td><?php echo $patient['dni']; ?></td>
-							<td><?php echo __dateISOToLocale( $patient['fechaNacimiento'] ); ?></td>
-							<td>
-								<span title="<?php echo $patient['telefono']; ?>"><?php echo $patient['telefono']; ?></span>
-							</td>
-							<td>
-								<span title="<?php echo $patient['obraSocialNombre']; ?>"><?php echo $patient['obraSocialNombre']; ?></span>
-							<td>
-								<a class="btn btn-mini is2-patients-details-trigger" href="#is2-modal-details" data-toggle="modal" title="Ver en detalle" data-patient-id="<?php echo $patient['id']; ?>"><i class="icon-eye-open"></i></a>
-								<a class="btn btn-mini" href="/pacientes/<?php echo $patient['id']; ?>/editar" title="Editar"><i class="icon-edit"></i></a>
-								<a class="btn btn-mini btn-danger is2-trigger-remove" href="#is2-modal-remove" data-toggle="modal" data-patient-id="<?php echo $patient['id']; ?>"><i class="icon-remove-sign" title="Borrar"></i></a>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-					</tbody>
+					<tr class="is2-patients-row" data-patient-id="<?php echo $patient['id']; ?>">
+						<td>
+							<span title="<?php echo $patient['apellidos']; ?>"><?php echo $patient['apellidos']; ?></span>
+						</td>
+						<td>
+							<span title="<?php echo $patient['nombres']; ?>"><?php echo $patient['nombres']; ?></span>
+						</td>
+						<td><?php echo __formatDNI( $patient['dni'] ); ?></td>
+						<td><?php echo __dateISOToLocale( $patient['fechaNacimiento'] ); ?></td>
+						<td>
+							<span title="<?php echo $patient['telefono']; ?>"><?php echo $patient['telefono']; ?></span>
+						</td>
+						<td>
+							<span title="<?php echo $patient['obraSocialNombre']; ?>"><?php echo $patient['obraSocialNombre']; ?></span>
+						<td>
+							<a class="btn btn-mini is2-patients-details-trigger" href="#is2-modal-details" data-toggle="modal" title="Ver en detalle" data-patient-id="<?php echo $patient['id']; ?>"><i class="icon-eye-open"></i></a>
+							<a class="btn btn-mini" href="/pacientes/<?php echo $patient['id']; ?>/editar" title="Editar"><i class="icon-edit"></i></a>
+							<a class="btn btn-mini btn-danger is2-trigger-remove" href="#is2-modal-remove" data-toggle="modal" data-patient-id="<?php echo $patient['id']; ?>" title="Borrar"><i class="icon-remove-sign icon-white"></i></a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
 				</table>
 			</div>
 			
-			<?php if( $isSingle ): ?>
-			<div class="is2-record-new-popover">
+				<?php if( $isSingle ): ?>
+			<div class="is2-popover">
 				<div class="alert">
 					<strong>¡Nuevo paciente ha sido creado satisfactoriamente!</strong>
 				</div>
@@ -379,18 +364,18 @@
 					<i class="icon-arrow-left"></i>
 					Listar pacientes
 				</a>
-				<button class="btn btn-link btn-mini is2-record-new-popover-close">¡Entendido!</button>
+				<button class="btn btn-link btn-mini is2-popover-close">¡Entendido!</button>
 			</div>
-			<?php else: ?>
+				<?php else: ?>
 			<ul class="pager">
 				<li class="previous <?php echo $offset ? 'active': 'disabled'; ?>">
-					<a href="<?php echo $offset == 0 ? '#' : $queryString . '&pagina=' . ($offset-1); ?>">&larr; Anterior</a>
+					<a href="<?php echo $offset == 0 ? '#' : __getGETComplete( 'pagina', array( 'pagina', $offset - 1 ) ); ?>">&larr; Anterior</a>
 				</li>
 				<li class="next <?php echo $stillMorePages ? 'active': 'disabled'; ?>">
-					<a href="<?php echo $stillMorePages ? $queryString . '&pagina=' . ($offset+1) : '#'; ?>">Siguiente &rarr;</a>
+					<a href="<?php echo $stillMorePages ? __getGETComplete( 'pagina', array( 'pagina', $offset + 1 ) ) : '#'; ?>">Siguiente &rarr;</a>
 				</li>
 			</ul>
-			<?php endif; ?>
+				<?php endif; ?>
 			
 			<?php else: ?>
 			<div class="alert alert-error">
@@ -401,7 +386,7 @@
 		<?php t_endWrapper(); ?>
 		
 		<!-- los modals -->
-		<form method="post" action="/pacientes/borrar" id="is2-modal-remove" class="modal hide fade">
+		<form method="post" action="" id="is2-modal-remove" class="modal hide fade">
 			<div class="modal-body">
 				<button class="close" data-dismiss="modal">&times;</button>
 				<p><strong>¿Estás seguro que desea borrar este paciente?</strong></p>
@@ -411,13 +396,12 @@
 				<button class="btn" data-dismiss="modal">Cancelar</button>
 				<button class="btn btn-primary" type="submit">Borrar</button>
 			</div>
-			<input type="hidden" name="id">
 		</form>
 		
-		<form id="is2-modal-details" class="modal hide fade">
-			<div class="wrapper">
-				<div class="is2-preloader-wrapper">
-					<div class="is2-preloader-big is2-patients-details-preloader"></div>
+		<div id="is2-modal-details" class="modal hide fade">
+			<div class="is2-modal-wrapper">
+				<div class="progress progress-striped active is2-modal-preloader">
+					<div class="bar"></div>
 				</div>
 				<div class="is2-modal-details-header">
 					<div class="modal-body">
@@ -425,7 +409,7 @@
 							<i class="icon-remove-sign"></i>
 						</button>
 					</div>
-					<h1 class="is2-patient-data" data-field-name="nombreCompleto"></h1>
+					<h1 class="is2-patient-data"><span class="is2-patient-data" data-field-name="apellidos"></span>, <span class="is2-patient-data" data-field-name="nombres"></span></h1>
 					<ul>
 						<li class="is2-patient-data" data-field-name="dni"></li>
 						<li class="is2-patient-data" data-field-name="fechaNacimiento"></li>
@@ -434,9 +418,10 @@
 				</div>
 				<div class="is2-modal-details-body">
 					<ul>
-						<li>Teléfono: <strong class="is2-patient-data" data-field-name="telefono">4570670</strong></li>
-						<li>Obra social: <strong class="is2-patient-data" data-field-name="obraSocialAbbr">IOMA</strong> <strong class="is2-patient-data is2-patient-data-insurance" data-field-name="obraSocialNombre"></strong></li>
-						<li>Número de afiliado: <strong class="is2-patient-data" data-field-name="nroAfiliado">34354656565/12</strong></li>
+						<li>Teléfono: <strong class="is2-patient-data" data-field-name="telefono"></strong></li>
+						<li>Dirección: <strong class="is2-patient-data" data-field-name="direccion"></strong></li>
+						<li>Obra social: <strong class="is2-patient-data" data-field-name="obraSocialAbbr"></strong> <strong class="is2-patient-data is2-patient-data-insurance" data-field-name="obraSocialNombre"></strong></li>
+						<li>Número de afiliado: <strong class="is2-patient-data" data-field-name="nroAfiliado"></strong></li>
 					</ul>
 					<div class="is2-modal-details-appointments" style="display:none">
 						<table class="table">
@@ -458,7 +443,7 @@
 					</div>
 				</div>
 			</div>
-		</form>
+		</div>
 		
 <?php t_endBody(); ?>
 
@@ -467,14 +452,15 @@
 
 	IS2.initDatepickers();
 
+// *** borrar paciente funcionalidd *** //
 	$( '.is2-grid' ).delegate( '.is2-trigger-remove', 'click', function( e ) {
-		$( '#is2-modal-remove' ).find( 'input[name="id"]' ).val( $( this ).attr( 'data-patient-id' ) );
+		$( '#is2-modal-remove' ).attr( 'action', '/pacientes/' + $( this ).attr( 'data-patient-id' ) + '/borrar' );
 	} );
 	
 // *** PARA EL DETALLE DEL PACIENTE *** //
 	var $patientDetailsModal = $( '#is2-modal-details');
-	var $patientDetailsModalPreloader = $( '.is2-preloader-wrapper' );
-	var $patientDetailsModalPreloaderIcon = $( '.is2-patients-details-preloader' );
+	var $patientDetailsModalPreloader = $( '.is2-modal-preloader' );
+	var $patientDetailsModalPreloaderBar = $patientDetailsModalPreloader.find( '.bar' );
 	var isWaiting = false;
 	var $patientFields = $( '.is2-patient-data' );
 	var $appointmentRecord = $( '.is2-modal-details-appointments-record' ).clone();
@@ -482,6 +468,7 @@
 	var $appointmentsWrapper = $( '.is2-modal-details-appointments' );
 	var $appointmentsGrid = $( '.is2-modal-details-appointments table' );
 	var $emptyAppointments = $( '.is2-modal-details-appointments-empty' );
+	var $patientDetailsContent = $( '.is2-modal-details-header, .is2-modal-details-body' );
 	
 	$patientDetailsModal .css( 'left', $( window ).outerWidth() /2 - 850 / 2 ).css( 'margin-left', 0 ).on( 'hidden', function( e ) {
 		$( 'tr.is2-patients-row.is2-record-new' ).removeClass( 'is2-record-new' );
@@ -489,8 +476,10 @@
 	
 	var showPatientDetails = function( dataResponse ) {
 		isWaiting = false;
-		$patientDetailsModalPreloader.fadeOut( 'fast' );
-		$patientDetailsModalPreloaderIcon.css( 'visibility', 'hidden' );
+		$patientDetailsModalPreloaderBar.css( 'width', '100%' );
+		window.setTimeout( function() {
+			$patientDetailsModalPreloader.fadeOut( 'fast' );
+		}, 500 );
 		if( !dataResponse.success ){
 			return false;
 		}
@@ -527,7 +516,9 @@
 		} else {
 			$emptyAppointments.hide();
 		}
-		$appointmentsWrapper.slideDown( 'fast' );
+		$appointmentsWrapper.slideDown( 'fast', function() {
+			$patientDetailsContent.css( 'visibility', 'visible' );
+		} );
 	};
 	
 	$( '.is2-grid-wrapper' ).delegate( '.is2-patients-details-trigger', 'click', function( e ) {
@@ -535,7 +526,8 @@
 			return;
 		}
 		isWaiting = true;
-		$patientDetailsModalPreloaderIcon.css( 'visibility', 'visible' );
+		$patientDetailsContent.css( 'visibility', 'hidden' );
+		$patientDetailsModalPreloaderBar.css( 'width', '1%' );
 		$patientDetailsModalPreloader.fadeIn( 'fast' );
 		
 		var patientID = $( this ).attr( 'data-patient-id' );
@@ -602,9 +594,63 @@
 	} );
 	
 // *** cuando vengo de crear un nuevo paciente *** //
-	if( window.location.search.indexOf( 'id' ) >= 0 ) {
+	if( window.location.search.indexOf( 'id=' ) >= 0 && window.location.search.indexOf( 'exito=crear-paciente' ) >= 0 ) {
 		IS2.showNewRecord( $( '.is2-patients-row' ) );
 	}
+
+// *** BUSQUEDA AVANZADA *** //
+	var $advancedForm = $( '.is2-search-advanced-form' );
+	$advancedForm.on( 'submit', function( e ) {
+		/** @todo: validate fields */
+		e.preventDefault();
+		var formData = IS2.getFormFields( $advancedForm );
+		var lastNames = formData.lastName.split( ' ' ),
+		lastNamesArr = [],
+		i = 0, l = lastNames.length;
+		for( ; i < l; i++ ) {
+			lastNamesArr.push( lastNames[i].trim() );
+		}
+		var firstNames = formData.firstName.split( ' ' ),
+		firstNamesArr = [];
+		for( i = 0, l = firstNames.length; i < l; i++ ) {
+			firstNamesArr.push( firstNames[i].trim() );
+		}
+		formData.birthDateStart = IS2.getISODate( formData.birthDateStart );
+		formData.birthDateEnd = IS2.getISODate( formData.birthDateEnd );
+		formData.patientsList = formData.patientsList ? formData.patientsList.replace( /\./g, '' ).split( /\s+/ ) : [];
+		formData.affiliateInsuranceNumber = formData.affiliateInsuranceNumber.split( /\s+/ );
+		// make the query
+		var query = ( lastNamesArr.length ? lastNamesArr.join( '-' ) : '' ) + '|' + ( firstNamesArr.length ? firstNamesArr.join( '-' ) : '' ) + '|' + formData.birthDateStart + '@' + formData.birthDateEnd + '|' + ( formData.insurancesList.length ? formData.insurancesList.join( '-' ) : '' ) + '|' + ( formData.patientsList.length ? formData.patientsList.join( '-' ) : '' ) + '|' + ( formData.affiliateInsuranceNumber.length ? formData.affiliateInsuranceNumber.join( '-' ) : '' );
+		window.location = '/pacientes?busqueda-avanzada=' + btoa( query );
+	} );
+// *** BUSQUEDA RAPIDA *** //
+	var $searchQuery = $( '.is2-search-quick-input' );
+	var $searchControlGroup = $( '.is2-search-quick-control' );
+	$( '.is2-search-quick-form' ).on( 'submit', function( e ) {
+		e.preventDefault();
+		var keyword = $searchQuery.val().trim();
+		if( !keyword ) {
+			$searchControlGroup.addClass( 'error' );
+			return;
+		}
+		$searchControlGroup.removeClass( 'error' );
+		var field;
+		var value;
+		// is a date?
+		if( ( value = IS2.getISODate( keyword ) ) ) {
+			field = 'fechaNacimiento';
+		// is a dni OR tel?
+		} else if( ( value = keyword.replace( /\./g, '' ) - 0 ) || ( value = keyword.match( /^[^#*\d-()]+$/ ) - 0 ) ) {
+			field = 'dni|telefono';
+		// is a lopez, marcos?
+		} else if( ( value = keyword.split( /\s*,\s*/ ) ) && value.length === 2 ) {
+			field = 'fullname';
+		} else {
+			field = 'comodin';
+			value = keyword;
+		}
+		window.location = '/pacientes?busqueda=' + btoa( field + '=' + value );
+} );
 	
 })();
 </script>

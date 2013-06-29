@@ -2,24 +2,29 @@
 
 /* {{{ ESTE ES CUANDO VIENE DE SORTEAR LA GRID */
 	$orderByType = false;
+	$orderByLastName = 'ASC';
+	$orderByFirstName = 'ASC';
+	$orderByBirthDate = false;
 	$orderByCustom = array();
 	// se puede ordenar por apellidos y nombres a la vez...
 	if( ( $orderByType = __GETField( 'apellido' ) ) ) {
-		$orderByCustom['apellidos'] = $orderByType;
+		$orderByCustom['apellidos'] = $orderByLastName = strtoupper( $orderByType );
 	}
 	if( ( $orderByType = __GETField( 'nombre' ) ) ) {
-		$orderByCustom['nombres'] = $orderByType;
+		$orderByCustom['nombres'] = $orderByFirstName = strtoupper( $orderByType );
 	}
 	// ..pero no se puede cobinar con fecha-de-nacimiento
 	if( !count( $orderByCustom ) && ( $orderByType = __GETField( 'fecha-de-nacimiento' ) ) ) {
-		$orderByCustom['fechaNacimiento'] = $orderByType;
+		$orderByCustom['fechaNacimiento'] = $orderByBirthDate = strtoupper( $orderByType );
+		$orderByLastName = false;
+		$orderByFirstName = false;
 	}
 	// validate
 	$orderByClause = array();
 	if( count( $orderByCustom ) ) {
 		foreach( $orderByCustom as $orderByCol => $orderByType ) {
 			// si me metio mano, poner ASC
-			if( !in_array( strtoupper( $orderByType ), array( 'ASC', 'DESC' ) ) ) {
+			if( !in_array( $orderByType, array( 'ASC', 'DESC' ) ) ) {
 				$orderByClause[] = ' p.' . $orderByCol . ' ASC ';
 			} else {
 				$orderByClause[] = ' p.' . $orderByCol . ' ' . $orderByType . ' ';
@@ -150,15 +155,23 @@
 		}
 		
 		$field =  $keyword[0];
-		$value = $keyword[1];
+		$value = $quickSearchValue = $keyword[1];
+
 		if( $field == 'fechaNacimiento' ) {
 			$whereClause[] = ' p.fechaNacimiento = ? ';
 			$replacements[] = $value;
+			$quickSearchValue = __dateISOToLocale( $value );
 			
 		} else if( $field == 'dni|telefono' ) {
 			$whereClause[] = ' p.dni = ? OR p.telefono = ? ';
 			$replacements[] = $value;
 			$replacements[] = $value;
+			
+		} else if( $field == 'fullname' && ( $fullname = explode( ',', $value ) ) && count( $fullname ) == 2 ) {
+			$whereClause[] = ' p.apellidos LIKE ? ';
+			$replacements[] = '%' . trim( $fullname[0] ) . '%';
+			$whereClause[] = ' p.nombres LIKE ? ';
+			$replacements[] = '%' . trim( $fullname[1] ) . '%';
 
 		} else if( $field == 'comodin' ) {
 			$whereClause[] = ' ( p.nombres LIKE ? OR p.apellidos LIKE ? OR os.nombreCorto LIKE ? ) ';
@@ -170,7 +183,6 @@
 			__redirect( '/pacientes?error=buscar-paciente-rapido' );
 		}
 		
-		$quickSearchValue = $value;
 		$isQuickSearch = true;
 		$isSearch = true;
 		
@@ -197,11 +209,29 @@ CASO CONTRARIO LISTO LOS APELLIDO QUE EMPIECEN CON 'A' */
 	if( !$offset ) {
 		$offset = 0;
 	}
-	// pido los pacientes en base a un $offset
-	$patients = q_getPatients( $whereClause, $replacements, $orderByClause, $offset );
+	
+	$patients = DB::select(
+		'
+			SELECT
+				p.id, p.apellidos, p.nombres, p.dni, p.fechaNacimiento, p.telefono, p.nroAfiliado, 
+				os.nombreCorto AS obraSocialNombre 
+			FROM pacientes AS p 
+				INNER JOIN obrasSociales AS os 
+					ON os.id = p.idObraSocial 
+			WHERE 
+		' .
+			implode( ' AND ', $whereClause ) .
+		'
+			ORDER BY 
+		' .
+				implode( ', ', $orderByClause ) .
+		'
+			LIMIT ' . $offset * 30 . ' , 31 
+		',
+		$replacements
+	);
 	// veo si tengo que SEGUIR paginar
-	if( count( $patients ) == 31 ) {
-		array_pop( $patients );
+	if( $patients->rowCount() == 31 ) {
 		$stillMorePages = true;
 	} else {
 		$stillMorePages = false;
@@ -218,6 +248,7 @@ CASO CONTRARIO LISTO LOS APELLIDO QUE EMPIECEN CON 'A' */
 	// ... o de error
 	} else if( __issetGETField( 'error', 'borrar-paciente' ) ) {
 		$removeError = true;
+		
 	} else if( __issetGETField( 'error', 'editar-paciente' ) ) {
 		$editError = true;
 	
@@ -227,8 +258,6 @@ CASO CONTRARIO LISTO LOS APELLIDO QUE EMPIECEN CON 'A' */
 	} else if( __issetGETField( 'error', 'buscar-paciente-rapido' ) ) {
 		$searchQuickError = true;
 	}
-	
-	$queryString = __getGETComplete( 'pagina' );
 	
 	$insurances = q_getAllInsurances();
 	
@@ -244,11 +273,13 @@ CASO CONTRARIO LISTO LOS APELLIDO QUE EMPIECEN CON 'A' */
 			'stillMorePages' => $stillMorePages,
 			'offset' => $offset,
 			'isSingle' => $isSingle,
-			'queryString' => $queryString,
 			'insurances' => $insurances,
 			'persistValues' => $persistValues,
 			'searchQuickError' => $searchQuickError,
-			'quickSearchValue' => $quickSearchValue
+			'quickSearchValue' => $quickSearchValue,
+			'orderByLastName' => $orderByLastName,
+			'orderByFirstName' => $orderByFirstName,
+			'orderByBirthDate' => $orderByBirthDate
 		)
 	);
 /* }}} */

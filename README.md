@@ -12,28 +12,88 @@ httpd.conf
 -------------
 Hay que congiurar el archivo `httpd.conf` de la aplicación Apache, este se abre desde el icono del WampServer haciendole click izquierdo, opcion `Apache` -> `httpd.conf`
 
-Ubicar esta línea (yo la tengo en la linea numero **116**)
+Tiene que tener los siguientes modulos cargados
+```
+LoadModule deflate_module modules/mod_deflate.so
+LoadModule expires_module modules/mod_expires.so
+LoadModule headers_module modules/mod_headers.so
+LoadModule rewrite_module modules/mod_rewrite.so
+```
 
-`#LoadModule rewrite_module modules/mod_rewrite.so`
+En **linux** la tiene mas facil, pongan la consola, loguesenen como **root**, tiren el siguiente comando y listo!
+```
+# a2enmod deflate expires headers rewrite
+```
 
-Solo hay que quitarle el numeral al principio de la línea, nada mas que eso.
+Ademas obviamente el modulo necesario para cargar PHP, la mia es
+`LoadModule php5_module "c:/wamp/bin/php/php5.4.3/php5apache2_2.dll`
 
-Siguiente, ubicar la linea ( **178** )
+En **linux**, como root hacen (y si estan usando **Ubuntu**):
+```
+# apt-get install libapache-mod-php5
+```
 
-`DocumentRoot "c:\wamp\bla..."`
+Listo ahora, hay que decirle a Apache que en la URL `localhost:8080` va a cargar nuestra aplicacion, para eso al final del `htppd.conf` ponemos
 
-Aca lo que hay que hacer es poner como direccion donde va a estar ubicado los archivos que hacen la aplicacion, es decir, todo este repositorio.
+```
+Listen 8080
+<VirtualHost *:8080>
+    ServerName www.example.org
+    DocumentRoot "C:\Documents and Settings\arcollector\Desktop\is2"
 
-Y tambien hay que hacer lo mismo con esta linea ( **205** )
+  <Directory "C:\Documents and Settings\arcollector\Desktop\is2">
+        Options -Indexes FollowSymLinks -MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+  </Directory>
 
-`<Directory "c:\wamp\bla...">`
+  ErrorLog "C:\Documents and Settings\arcollector\Desktop\is2\error_efin.log"
+  LogLevel warn
+  CustomLog "C:\Documents and Settings\arcollector\Desktop\is2\access.log" combined
+
+</VirtualHost>
+```
+
+Deben cambiar `C:\Documents and Settings\arcollector\Desktop\is2` por la direccion donde tengan puesto este repositiorio.
+
+mod_xsendfile.so (opcional)
+--------------------------
+Esto no es necesario, pero si muy recomendable. **mod_xsendfile.so** es un modulo no oficial para Apache que se usa para el tema de la descarga de archivos, delegando este proceso a este modulo y liberando PHP de esta funcion.
+
+Se lo bajan de [aca](https://github.com/nmaier/mod_xsendfile), busquen el `mod_xsendfile.so` para su version de Apache que estan usando y coloquen este archivo en la carpeta de modulos de Apache, ahora lo que tiene que hacer cargar este modulo desde el `httpd.conf`, lo hacen de la siguiente manera:
+`LoadModule xsendfile_module modules/mod_xsendfile.so`
+
+Ahora en su `<VirtualHost>` ponen el siguiente codigo:
+```
+<Directory "/">
+    Options -Indexes -FollowSymLinks -MultiViews
+    AllowOverride All
+    Order allow,deny
+    XSendFile On
+    XSendFilePath "C:/Windows/TEMP"
+</Directory>
+```
+En Linux, deberian poner `/tmp` en la directiva `XSendFilePath`
+
+PHP
+-----
+Necesitan una version mayor ó igual a la **5.3**
+
+Ademas de los modulos habilitados en el `php.ini`
+```
+extension=php_mbstring.dll
+extension=php_gd2.dll
+extension=php_pdo_mysql.dll
+```
+En Linux la extension seria `.so`
 
 MySQL credenciales
 -------------------------
-Corran el archivo `mysql.credenciales.bat`, este les creara un archivo llamdo `mysql.ini` necesario para que PHP pueda acceder a la base de datos, si estan usando WampServer, las credenciales que deben usar son:
+Corran el archivo `mysql.credenciales.bat` si estan en Window ó `mysql.credenciales.sh` si estan Linux, este les creara un archivo llamdo `mysql.ini` necesario para que la aplicacion mediante PHP pueda acceder a la base de datos, si estan usando WampServer, MySQL viene con estas credenciales:
 
-1. usuario: `root`
-2. clave: ` ` (nada)
+* usuario: `root`
+* clave: ` ` (nada)
 	
 Creando la base de datos y sus tablas
 ------------------------------------------------
@@ -50,7 +110,7 @@ Para este caso y si estan con WampServer, mysql esta (en mi caso) aca
 
 Por ejemplo le quedaria algo como esto:
 
-`mysql -u root -p123456 < _init_db.sql`
+`mysql --local-infile -u root -p123456 < _init_db.sql`
 
 *Listo ya estamos!*
 

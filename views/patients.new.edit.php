@@ -9,11 +9,16 @@
 		.popover .is2-popover-msg {
 			display: block;
 		}
+		.is2-insurances-list {
+			width: 284px;
+			text-transform: capitalize;
+		}
 	</style>
 <?php t_endHead(); ?>
 <?php t_startBody( $username, 'patients'  ); ?>
 	
 		<?php t_startWrapper(); ?>
+
 			<?php if( $createError ): ?>
 			<div class="alert alert-error">
 				<a class="close" data-dismiss="alert" href="#">&times;</a>
@@ -40,24 +45,28 @@
 				</ul>
 			</div>
 			<?php endif; ?>
+			
 			<div class="is2-pagetitle clearfix">
 				<h3>Pacientes - <?php echo $page; ?></h3>
 				<a class="btn pull-right" href="/pacientes"><i class="icon-arrow-left"></i> Listar pacientes</a>
 			</div>
 			
 			<form class="form-horizontal is2-patient-form" method="post" action="">
+			
 				<div class="control-group">
 					<label class="control-label">Apellidos</label>
 					<div class="controls">
 						<input type="text" class="input-xlarge" placeholder="Apellidos" name="lastName" value="<?php echo $patient['apellidos']; ?>" data-html="true" data-trigger="manual">
 					</div>
 				</div>
+				
 				<div class="control-group">
 					<label class="control-label">Nombres</label>
 					<div class="controls">
 						<input type="text" class="input-xlarge" placeholder="Nombres" name="firstName" value="<?php echo $patient['nombres']; ?>" data-html="true" data-trigger="manual">
 					</div>
 				</div>
+				
 				<div class="control-group">
 					<label class="control-label">Sexo</label>
 					<div class="controls">
@@ -67,6 +76,7 @@
 						</select>
 					</div>
 				</div>
+				
 				<div class="control-group is2-patient-dni-wrapper">
 					<label class="control-label">DNI</label>
 					<div class="controls">
@@ -79,6 +89,7 @@
 						El número de documento no es válido
 					</div>
 				</div>
+				
 				<div class="control-group is2-patient-birthdate-wrapper">
 					<label class="control-label">Fecha de nacimiento</label>
 					<div class="controls">
@@ -91,6 +102,7 @@
 						La fecha debe estar en el formato dd/mm/yyyy para ser reconocida como valida, por ejemplo algo como: 21/03/1940
 					</div>
 				</div>
+				
 				<div class="control-group is2-patient-phone-wrapper">
 					<label class="control-label">Teléfono</label>
 					<div class="controls">
@@ -100,6 +112,14 @@
 						El número de teléfono no es válido
 					</div>
 				</div>
+				
+				<div class="control-group">
+					<label class="control-label">Dirección</label>
+					<div class="controls">
+						<textarea class="input-xlarge is2-patient-address" placeholder="Dirección" name="address"><?php echo $patient['direccion']; ?></textarea>
+					</div>
+				</div>
+				
 				<div class="alert">
 					Si el paciente no tiene obra social, eliga la opción <strong>LIBRE</strong>
 				</div>
@@ -120,17 +140,11 @@
 						<input type="text" class="input-xlarge is2-insurance-number" placeholder="Número de afiliado" name="insuranceNumber" value="<?php echo $patient['nroAfiliado']; ?>" data-html="true" data-trigger="manual">
 					</div>
 				</div>
+				
 				<div class="control-group">
 					<div class="controls">
-						<button type="submit" class="btn">Editar paciente</button>
+						<button type="submit" class="btn btn-primary btn-large"><?php echo $buttonLabel; ?></button>
 					</div>
-				</div>
-				<?php if( $patient['id'] ): ?>
-				<input type="hidden" name="id" value="<?php echo $patient['id']; ?>">
-				<?php endif; ?>
-				
-				<div class="alert alert-error is2-popover-msg is2-patient-empty">
-					Este campo no puede estar vacio
 				</div>
 			</form>
 			
@@ -142,7 +156,11 @@
 (function() {
 
 	IS2.initDatepickers();
-	IS2.loadPrevState( 'is2-patient-state' );
+	if( window.location.search.indexOf( 'exito=editar-paciente' ) >= 0 ) {
+		IS2.cleanPrevState();
+	} else {
+		IS2.loadPrevState( 'is2-patient-state' );
+	}
 
 // *** NORMAL THINGS *** //
 	var $insurancesList = $( '.is2-insurances-list' );
@@ -154,6 +172,11 @@
 		}
 	} );
 	
+	var scrollTo = function( $el ) {
+		$.scrollTo( $el, 800 );
+	}
+	
+	var $pageTitle = $( '.is2-pagetitle' );
 	var $birthDate = $( '.is2-patient-birthdate' );
 	var $birthDateGroupError = $( '.is2-patient-birthdate-wrapper' );
 	var $dni = $( '.is2-patient-dni' );
@@ -164,46 +187,33 @@
 	$theForm.on( 'submit', function( e ) {
 		$birthDate.popover( 'destroy' );
 
-		var isError = false;
-		$theForm.find( 'input' ).each( function() {
-			var $el = $( this ),
-				$groupControl = $el;
-				
-			$el.popover( 'destroy' );			
-			while( ( $groupControl = $groupControl.parent() ).length && !$groupControl.hasClass( 'control-group' ) );
-			
-			if( !$el.val().trim() ) {
-				$el.popover( { content: $( '.is2-patient-empty' ).prop( 'outerHTML' ) } ).popover( 'show' );
-				$groupControl.addClass( 'error' );
-				isError = true;
-			} else {
-				$groupControl.removeClass( 'error' );
-			}
-		} );
-		if( isError ) {
+		if( IS2.lookForEmptyFields( $theForm ) ) {
 			e.preventDefault();
+			scrollTo( $pageTitle );
 			return;
 		}
-	
+		
 		// check birthDate validity
-		var date = $birthDate.val().split( '/' );
-		if( date.length != 3 ) {
+		var date = $birthDate.val().match( /^(\d{2})\/(\d{2})\/(\d{4})$/ );
+		if( !date ) {
 			e.preventDefault();
 			$birthDate.popover( { content: $( '.is2-patient-birthdate-popover-invalid' ).prop( 'outerHTML' ) } ).popover( 'show' );
 			$birthDateGroupError.addClass( 'error' );
+			scrollTo( $dniGroupControl );
 			return;
 		}
 		var target = new Date();
 		target.setDate( 1 );
-		target.setFullYear( date[2] );
-		target.setMonth( date[1]-1 );
-		target.setDate( date[0] );
+		target.setFullYear( date[3] );
+		target.setMonth( date[2]-1 );
+		target.setDate( date[1] );
 		var base = new Date();
 		base.setDate( base.getDate() + 1 );
 		if( target > base ) {
 			e.preventDefault();
 			$birthDateGroupError.addClass( 'error' );
 			$birthDate.popover( { content: $( '.is2-patient-birthdate-popover-overflow' ).prop( 'outerHTML' ) } ).popover( 'show' );
+			scrollTo( $dniGroupControl );
 			return;
 		}
 		$birthDateGroupError.removeClass( 'error' );
@@ -213,6 +223,7 @@
 			e.preventDefault();
 			$dniGroupControl.addClass( 'error' );
 			$dni.popover( { content: $( '.is2-patient-dni-popover-invalid' ).prop( 'outerHTML' ) } ).popover( 'show' );
+			scrollTo( $dniGroupControl );
 			return;
 		}
 		$dniGroupControl.removeClass( 'error' );
@@ -222,6 +233,7 @@
 			e.preventDefault();
 			$phoneGroupControl.addClass( 'error' );
 			$phone.popover( { content: $( '.is2-patient-phone-popover' ).prop( 'outerHTML' ) } ).popover( 'show' );
+			scrollTo( $phoneGroupControl );
 			return;
 		}
 		$phoneGroupControl.removeClass( 'error' );
@@ -245,6 +257,7 @@
 		if( errors === 'duplicado' ) {
 			$dni.popover( 'show' );
 			$dniGroupControl.addClass( 'error' );
+			scrollTo( $pageTitle );
 		}
 	}
 	

@@ -10,19 +10,21 @@
 		error_reporting( -1 );
 	}
 	
-	require './assets/db.php';
-	require './assets/router.php';
+	$PWD = getcwd();
+	require $PWD . '/assets/db.php';
+	require $PWD . '/assets/router.php';
 	// las funciones helpers tienen como prefijo __
-	require './assets/helpers.php';
+	require $PWD . '/assets/helpers.php';
 	// las funciones template tienen como prefijo t_
-	require './views/_template.php';
+	require $PWD . '/views/_template.php';
 	// las queries tienen como prefijo q_
-	require './assets/queries.php';
+	require $PWD . '/assets/common.queries.php';
 	// init some things
 	DB::init();
 	Router::init();
 	__initSession();
-	__initDebugging();
+	__initMinifyingProcess();
+
 	// enforce utf8 output
 	__forceUTF8Enconding();
 	
@@ -38,41 +40,54 @@
 		
 // *** TURNOS *** //
 		'/turnos' => 'appointments',
-		'/turnos/confirmar' => 'appointments.confirm',
-		'/turnos/cancelar' => 'appointments.cancel',
-		'/turnos/borrar' => 'appointments.remove',
-		'/turnos/reiniciar' => 'appointments.reset',
-		'/turnos/busqueda-rapida' => 'appointments.search.quick',
-		'/turnos/busqueda-avanzada' => 'appointments.search.advanced',
+		'/turnos/:id/confirmar' => 'appointments.confirm',
+		'/turnos/:id/cancelar' => 'appointments.cancel',
+		'/turnos/:id/borrar' => 'appointments.remove',
+		'/turnos/:id/reiniciar' => 'appointments.reset',
 		'/turnos/crear' => 'appointments.new',
+		'/turnos/exportar/excel' => 'appointments.export.excel',
+		'/turnos/exportar/imprimir' => 'appointments.export.print',
+		'/turnos/exportar/pdf' =>  'appointments.export.pdf',
 
 // *** MEDICOS *** //
 		'/medicos/comprobar-horarios-disponibilidad' => 'doctors.check.availability',
+		'/medicos' => 'doctors',
+		'/medicos/:id' => 'doctors.details',
+		'/medicos/:id/crear-horario' => 'doctors.availability.new',
+		'/medicos/:id/borrar-horario' => 'doctors.availability.remove',
+		'/medicos/:id/actualizar-obras-sociales-admitidas' => 'doctors.insurances.update',
+		'/medicos/:id/turnos' => 'doctors.appointments',
+		'/medicos/:id/crear-licencia' => 'doctors.license.new',
+		'/medicos/:id/licencias' => 'doctors.license',
+		'/medicos/:id/borrar-licencia' => 'doctors.license.remove',
+		'/medicos/crear' => 'doctors.new',
+		'/medicos/:id/editar' => 'doctors.edit',
+		'/medicos/:id/borrar' => 'doctors.remove',
 		
 // *** PACIENTES *** //
 		'/pacientes' => 'patients',
-		'/pacientes/buscar/dni' => 'patients.search.dni',
-		'/pacientes/borrar' => 'patients.remove',
+		'/pacientes/:id/borrar' => 'patients.remove',
 		'/pacientes/crear' => 'patients.new',
 		'/pacientes/:id/editar' => 'patients.edit',
 		'/pacientes/listar-por-letra/:char' => 'patients',
-		'/pacientes/busqueda-avanzada' => 'patients.search.advanced',
-		'/pacientes/busqueda-rapida' => 'patients.search.quick',
 		'/pacientes/:id' => 'patients.details',
+		'/pacientes/buscar-para-turno' => 'patients.search.for.appointment',
 
 // *** ESPECIALIDADES *** //
 		'/especialidades' => 'specialities',
 		'/especialidades/crear' => 'specialities.new',
-		'/especialidades/editar' => 'specialities.edit',
-		'/especialidades/borrar' => 'specialities.remove',
+		'/especialidades/:id/editar' => 'specialities.edit',
+		'/especialidades/:id/borrar' => 'specialities.remove',
 
 // *** OBRA SOCIALES *** //
 		'/obras-sociales' => 'insurances',
 		'/obras-sociales/crear' => 'insurances.new',
-		'/obras-sociales/editar' => 'insurances.edit',
-		'/obras-sociales/borrar' => 'insurances.remove'
+		'/obras-sociales/:id/editar' => 'insurances.edit',
+		'/obras-sociales/:id/borrar' => 'insurances.remove',
+		'/obras-sociales/:id/habilitar' => 'insurances.status',
+		'/obras-sociales/:id/deshabilitar' => 'insurances.status'
 	);
 	
-	require Router::start( $routes, '/404' );
+	require $PWD . '/models/' . Router::start( $routes, '/404' ) . '.php';
 
 ?>

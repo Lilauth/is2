@@ -1,14 +1,15 @@
 <?php
 
 	// both edit and create patients funtionality share some common things
-	require './models/_patients.new.edit.php';
+	global $PWD;
+	require_once $PWD . '/models/_patients.new.edit.php';
 	
 /* {{{ */
 	if( m_issetPOST() ) {
 		$fields = array();
 		$errors = array();
 		if( !m_processPOST( $fields, $errors ) ) {
-			___redirect( '/pacientes/crear?error=crear-paciente&campos=' . base64_encode( implode( '|', $errors ) ) );
+			__redirect( '/pacientes/crear?error=crear-paciente&campos=' . base64_encode( implode( '|', $errors ) ) );
 		}
 
 		$insertId = DB::insert( 
@@ -16,16 +17,16 @@
 				INSERT INTO
 					pacientes
 				VALUES
-					( null, ?, ?, ?, ?, ?, ?, ?, ? )
+					( null, ?, ?, ?, ?, ?, ?, ?, ?, ? )
 			',
 			$fields
 		);
-		
+
 		if( !$insertId ) {
 			__redirect( '/pacientes/crear?error=crear-paciente&campos=' . base64_encode( implode( '|', DB::getErrorList() ) ) );
 		}
 		
-		__redirect( '/pacientes?id=' . $insertId );
+		__redirect( '/pacientes?exito=crear-paciente&id=' . $insertId );
 	}
 /* }}} */
 
@@ -35,6 +36,7 @@
 	$username = __getUsername();
 	
 	$page = 'Crear';
+	$buttonLabel = 'Crear paciente';
 	
 // VENGO DE UN $_POST PERO HUBO PROBLEMAS
 	if( __GETField( 'error' ) ) {
@@ -50,6 +52,7 @@
 			'createError' => $createError,
 			'insurances' => $insurances,
 			'page' => $page,
+			'buttonLabel' => $buttonLabel,
 // estas son las varaibles que son edit, y que debo
 // conocer para no que '_patients.new.edit' no se rompa
 			'editSuccess' => false,
@@ -61,9 +64,9 @@
 				'dni' => '',
 				'fechaNacimiento' => '',
 				'telefono' => '',
+				'direccion' => '',
 				'idObraSocial' => '',
-				'nroAfiliado' => '',
-				'id' => false
+				'nroAfiliado' => ''
 			)
 		)
 	);
